@@ -116,6 +116,6 @@ app.post('/send-message',[body('number').notEmpty(), body('message').notEmpty()]
 })
 
 
-server.listen(8000, function(){
-    console.log('App running on port '+8000)
+server.listen(8080, function(){
+    console.log('App running on port '+8080)
 })
