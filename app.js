@@ -142,5 +142,5 @@ app.post(
 );
 
 server.listen(8080, function () {
-  console.log("App running on port 8080");
+  console.log("WhatsApp-API running on port 8080");
 });
