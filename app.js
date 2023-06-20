@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
+
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/assets/img/"));
 app.use(cors());
+
 console.log("directory assets: " + __dirname);
 
 app.get("/", (req, res) => {
@@ -31,13 +33,13 @@ const client = new Client({
     headless: true,
     args: [
       "--no-sandbox",
-      //   "--disable-setuid-sandbox",
-      //   "--disable-dev-shm-usage",
-      //   "--disable-accelerated-2d-canvas",
-      //   "--no-first-run",
-      //   "--no-zygote",
-      //   "--single-process",
-      //   "--disable-gpu",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
     ],
   },
   authStrategy: new LocalAuth({
@@ -56,7 +58,7 @@ io.on("connection", function (socket) {
   loadingTime = setInterval(() => {
     counter++;
     socket.emit("loading", `Connecting, please wait....(${counter})`);
-    // console.log(`Connecting, please wait....(${counter})`);
+    console.log(`Connecting, please wait....(${counter})`);
   }, 1000);
 
   client.on("qr", (qr) => {
