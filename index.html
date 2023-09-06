@@ -49,6 +49,7 @@
     $(document).ready(function () {
       var socket = io.connect("http://192.168.10.3:8080/");
       // var socket = io.connect("http://localhost:8080/");
+      console.log(socket);
 
       socket.on("loading", function (msg) {
         $("#loading").text(msg);
@@ -61,11 +62,14 @@
 
       socket.on("qr", function (src) {
         $("#qrcode").attr("src", src);
-        console.log(src);
       });
 
       socket.on("ready", function (ready) {
         $("#qrcode").attr("src", ready);
+      });
+
+      socket.on("logout", function (ready) {
+        $("#qrcode").attr("src", "#");
       });
     });
   </script>

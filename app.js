@@ -55,15 +55,25 @@ let loadingTime;
 
 // Socket Io
 io.on("connection", function (socket) {
-  loadingTime = setInterval(() => {
-    counter++;
-    socket.emit("loading", `Connecting, please wait....(${counter})`);
-    console.log(`Connecting, please wait....(${counter})`);
-  }, 1000);
+  console.log(webReady);
+
+  if (webReady == 0) {
+    loadingTime = setInterval(() => {
+      counter++;
+      socket.emit("loading", `Connecting, please wait....(${counter})`);
+      console.log(`Connecting, please wait....(${counter})`);
+    }, 1000);
+  } else {
+    socket.emit("loading", `WhatsApp, already running`);
+    let ready = "133187-ready-check.gif";
+    socket.emit("ready", ready);
+    console.log(`WhatsApp running, last count (${counter})`);
+  }
 
   client.on("qr", (qr) => {
-    webReady++;
+    webReady = 2;
     qrcode.toDataURL(qr, (err, url) => {
+      clearInterval(loadingTime);
       socket.emit("qr", url);
       socket.emit("message", "QR ready, please scan it");
       console.log("Not logged in, please scan barcode....");
@@ -71,17 +81,24 @@ io.on("connection", function (socket) {
   });
 
   client.on("authenticated", () => {
+    webReady = 1;
     clearInterval(loadingTime);
     socket.emit("message", "QR Code scanned");
-    console.log("QR Code scanned!");
+    console.log("QR Code scanned! " + webReady);
   });
 
   client.on("ready", () => {
-    webReady = 0;
+    webReady = 1;
     socket.emit("message", "WhatsApp is ready!");
     let ready = "133187-ready-check.gif";
     socket.emit("ready", ready);
-    console.log("Whatsapp ready!");
+    console.log("Whatsapp ready! " + webReady);
+  });
+
+  client.on("disconnected", (reason) => {
+    socket.emit("message", "Client logout, reason: " + reason);
+    socket.emit("logout", reason);
+    console.log("Client was logged out", reason);
   });
 });
 
@@ -140,6 +157,37 @@ app.post(
     }
   }
 );
+
+app.post("/info", (req, res) => {
+  if (webReady == 1) {
+    const errors = validationResult(req).formatWith(({ msg }) => {
+      return msg;
+    });
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        status: false,
+        message: errors.mapped(),
+      });
+    }
+
+    client.info.getBatteryStatus().then((battery) => {
+      console.log(battery);
+    });
+
+    return res.status(200).json({
+      status: true,
+      clientInfo: client.info,
+    });
+  } else {
+    return res.status(404).json({
+      status: false,
+      message: {
+        message: "WhatsApp is offline, please contact Admin " + webReady,
+      },
+    });
+  }
+});
 
 server.listen(8080, function () {
   console.log("WhatsApp-API running on port 8080");
