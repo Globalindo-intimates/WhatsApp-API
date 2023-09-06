@@ -112,7 +112,7 @@ app.post(
   "/send-message",
   [body("number").notEmpty(), body("message").notEmpty()],
   async (req, res) => {
-    if (webReady == 0) {
+    if (webReady == 1) {
       const errors = validationResult(req).formatWith(({ msg }) => {
         return msg;
       });
