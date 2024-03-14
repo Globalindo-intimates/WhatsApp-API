@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const qrcode = require('qrcode');
 const express = require('express');
 const socketIo = require('socket.io');
@@ -10,11 +11,40 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+=======
+const qrcode = require("qrcode");
+const express = require("express");
+const socketIo = require("socket.io");
+const { body, validationResult } = require("express-validator");
+const http = require("http");
+const { Client, LocalAuth } = require("whatsapp-web.js");
+const { numberFormatter } = require("./helpers/number_helper");
+const cors = require("cors");
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST"],
+//   credentials: false
+// }
+
+const app = express();
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+  cors: {
+    // origin: [ "http:\\192.168.10.242:8080"],
+    origin: "*",
+    methods: ["GET", "POST"],
+    // credentials: true,
+    // allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
+  },
+});
+>>>>>>> Stashed changes
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(__dirname+'/assets/'));
 app.use(cors());
+// app.use(cors(corsOptions));
 
 app.get('/',(req,res) => {
     res.sendFile('index.html', {root: __dirname});

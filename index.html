@@ -25,9 +25,18 @@
     $(document).ready(function(){
         var socket = io.connect('http://localhost:8000',);
 
+<<<<<<< Updated upstream
         socket.on('message', function(msg){
             $('.logs').append(`<li>${msg}</li>`);
         });
+=======
+  <script>
+    $(document).ready(function () {
+      // var socket = io.connect("http://192.168.10.3:8080/");
+      var socket = io();
+      // .connect("http://localhost:8080/");
+      console.log("isi socket", socket);
+>>>>>>> Stashed changes
 
         socket.on('qr', function(src){
             $('#qrcode').attr('src', src);
