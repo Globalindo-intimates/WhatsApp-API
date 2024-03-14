@@ -1,17 +1,3 @@
-<<<<<<< Updated upstream
-const qrcode = require('qrcode');
-const express = require('express');
-const socketIo = require('socket.io');
-const {body, validationResult} = require('express-validator');
-const http = require('http');
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const {numberFormatter} = require('./helpers/number_helper');
-const cors = require('cors');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-=======
 const qrcode = require("qrcode");
 const express = require("express");
 const socketIo = require("socket.io");
@@ -38,7 +24,6 @@ const io = socketIo(server, {
     // allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
   },
 });
->>>>>>> Stashed changes
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -146,6 +131,6 @@ app.post('/send-message',[body('number').notEmpty(), body('message').notEmpty()]
 })
 
 
-server.listen(8000, function(){
-    console.log('App running on port '+8000)
+server.listen(8080, function(){
+    console.log('App running on port '+8080)
 })
