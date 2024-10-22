@@ -6,33 +6,30 @@ const http = require("http");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const { numberFormatter } = require("./helpers/number_helper");
 const cors = require("cors");
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST"],
+//   credentials: false
+// }
 
 const app = express();
 const server = http.createServer(app);
 
-// Configure CORS options if needed
-const corsOptions = {
-  origin: "*", // You can specify allowed origins like ['http://localhost:3000', 'http://your-domain.com']
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false, // If you don't need to allow credentials (like cookies), set this to false
-};
-
-// Use CORS middleware for Express routes
-app.use(cors(corsOptions));
-
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Allow all origins or specify your allowed origins
+    // origin: [ "http:\\192.168.10.242:8080"],
+    origin: "*",
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: false, // Set to true if you need to support credentials
+    // credentials: true,
+    // allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
   },
 });
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/assets/'));
+app.use(express.urlencoded({extended:true}));
+app.use(express.static(__dirname+'/assets/'));
+app.use(cors());
+// app.use(cors(corsOptions));
 
 app.get('/',(req,res) => {
     res.sendFile('index.html', {root: __dirname});
